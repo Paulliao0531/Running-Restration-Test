@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEON RUSH 2026 - 賽事線上報名系統</title>
+  <meta name="description" content="2026 NEON RUSH 夜跑馬拉松線上報名系統。提供即時數位號碼布預覽、賽事組別挑選與裝備尺寸選擇。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 頂部導覽列 -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">N</div>
+      <h1 class="logo-text">Neon Rush 2026</h1>
+    </div>
+    <div class="race-date" id="race-date-badge">賽事日期：2026.10.18</div>
+  </header>
+
+  <!-- 報名成功後的彩帶畫布 -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- 主畫面 -->
+  <main>
+    <div class="app-grid" id="main-app-grid">
+      
+      <!-- 左欄：報名表單卡片 -->
+      <section class="form-section">
+        <div class="form-card" id="registration-form-card">
+          
+          <!-- 步驟指示器 (Stepper) -->
+          <div class="stepper">
+            <div class="stepper-progress-line" id="stepper-progress"></div>
+            <div class="step-node active" data-step="1">
+              <div class="step-circle">1</div>
+              <span class="step-label">選擇組別</span>
+            </div>
+            <div class="step-node" data-step="2">
+              <div class="step-circle">2</div>
+              <span class="step-label">基本資料</span>
+            </div>
+            <div class="step-node" data-step="3">
+              <div class="step-circle">3</div>
+              <span class="step-label">參賽細節</span>
+            </div>
+            <div class="step-node" data-step="4">
+              <div class="step-circle">4</div>
+              <span class="step-label">確認送出</span>
+            </div>
+          </div>
+
+          <!-- 表單分步內容 -->
+          <div class="form-steps-container">
+            
+            <!-- 步驟 1：選擇組別 -->
+            <div class="form-step active" id="step-1-content">
+              <div>
+                <h2 class="step-title">選擇您的參賽組別</h2>
+                <p class="step-subtitle">請選擇適合您的挑戰距離，各組別物資與費用有所不同</p>
+              </div>
+              
+              <div class="category-grid">
+                <!-- 42K 全馬組 -->
+                <div class="category-card active" data-category="42k" data-price="1200" data-fee-name="42K 全程馬拉松組">
+                  <div class="category-card-header">
+                    <span class="cat-distance">42K</span>
+                    <span class="cat-price">NT$ 1,200</span>
+                  </div>
+                  <div class="cat-name">全程馬拉松組</div>
+                  <div class="cat-details">
+                    <span>專業晶片計時 & 賽事證書</span>
+                    <span>Neon Rush 紀念跑衣</span>
+                    <span>完賽精美獎牌</span>
+                    <span>完賽大浴巾 & 補給豪華禮包</span>
+                  </div>
+                </div>
+
+                <!-- 21K 半馬組 -->
+                <div class="category-card" data-category="21k" data-price="1000" data-fee-name="21K 半程馬拉松組">
+                  <div class="category-card-header">
+                    <span class="cat-distance">21K</span>
+                    <span class="cat-price">NT$ 1,000</span>
+                  </div>
+                  <div class="cat-name">半程馬拉松組</div>
+                  <div class="cat-details">
+                    <span>專業晶片計時 & 賽事證書</span>
+                    <span>Neon Rush 紀念跑衣</span>
+                    <span>完賽精美獎牌</span>
+                    <span>完賽運動毛巾 & 補給禮包</span>
+                  </div>
+                </div>
+
+                <!-- 10K 挑戰組 -->
+                <div class="category-card" data-category="10k" data-price="800" data-fee-name="10K 路跑挑戰組">
+                  <div class="category-card-header">
+                    <span class="cat-distance">10K</span>
+                    <span class="cat-price">NT$ 800</span>
+                  </div>
+                  <div class="cat-name">路跑挑戰組</div>
+                  <div class="cat-details">
+                    <span>專業晶片計時 & 賽事證書</span>
+                    <span>Neon Rush 紀念跑衣</span>
+                    <span>完賽精美獎牌</span>
+                    <span>完賽運動飲料與輕補給</span>
+                  </div>
+                </div>
+
+                <!-- 5K 樂活組 -->
+                <div class="category-card" data-category="5k" data-price="600" data-fee-name="5K 樂活休閒組">
+                  <div class="category-card-header">
+                    <span class="cat-distance">5K</span>
+                    <span class="cat-price">NT$ 600</span>
+                  </div>
+                  <div class="cat-name">樂活休閒組</div>
+                  <div class="cat-details">
+                    <span>賽事個人紀念證書</span>
+                    <span>Neon Rush 紀念跑衣</span>
+                    <span>完賽完賽證書與小禮品</span>
+                    <span>適合家庭與初學者</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 步驟 2：基本資料 -->
+            <div class="form-step" id="step-2-content">
+              <div>
+                <h2 class="step-title">填寫基本資料</h2>
+                <p class="step-subtitle">請確實填寫您的真實身份資訊，以便保險與參賽登記</p>
+              </div>
+
+              <div class="form-group-row">
+                <div class="form-field" id="field-name">
+                  <label class="form-label" for="input-name">選手姓名<span class="required">*</span></label>
+                  <input type="text" id="input-name" class="form-input" placeholder="請輸入真實姓名" required autocomplete="name">
+                  <span class="error-msg">請輸入有效的姓名（至少 2 個字）</span>
+                </div>
+                
+                <div class="form-field" id="field-gender">
+                  <label class="form-label">性別<span class="required">*</span></label>
+                  <div class="radio-group">
+                    <label class="radio-option">
+                      <input type="radio" name="gender" value="M" checked>
+                      <span class="radio-box">男</span>
+                    </label>
+                    <label class="radio-option">
+                      <input type="radio" name="gender" value="F">
+                      <span class="radio-box">女</span>
+                    </label>
+                    <label class="radio-option">
+                      <input type="radio" name="gender" value="O">
+                      <span class="radio-box">其他</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group-row">
+                <div class="form-field" id="field-identity">
+                  <label class="form-label" for="input-identity">身分證字號 / 護照號碼<span class="required">*</span></label>
+                  <input type="text" id="input-identity" class="form-input" placeholder="例如：A123456789" required>
+                  <span class="error-msg">請輸入正確的身分證字號或護照號碼格式</span>
+                </div>
+                
+                <div class="form-field" id="field-blood">
+                  <label class="form-label">血型<span class="required">*</span></label>
+                  <div class="radio-group blood">
+                    <label class="radio-option">
+                      <input type="radio" name="blood" value="A" checked>
+                      <span class="radio-box">A</span>
+                    </label>
+                    <label class="radio-option">
+                      <input type="radio" name="blood" value="B">
+                      <span class="radio-box">B</span>
+                    </label>
+                    <label class="radio-option">
+                      <input type="radio" name="blood" value="AB">
+                      <span class="radio-box">AB</span>
+                    </label>
+                    <label class="radio-option">
+                      <input type="radio" name="blood" value="O">
+                      <span class="radio-box">O</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-field" id="field-birth">
+                <label class="form-label" for="input-birth">出生年月日<span class="required">*</span></label>
+                <input type="date" id="input-birth" class="form-input" required>
+                <span class="error-msg">請填寫出生年月日，未滿 12 歲需家長陪同</span>
+              </div>
+            </div>
+
+            <!-- 步驟 3：參賽細節與物資 -->
+            <div class="form-step" id="step-3-content">
+              <div>
+                <h2 class="step-title">聯絡資訊與物資細節</h2>
+                <p class="step-subtitle">我們將通過電話與信箱發送通知，並提供紀念跑衣尺寸選擇</p>
+              </div>
+
+              <div class="form-group-row">
+                <div class="form-field" id="field-phone">
+                  <label class="form-label" for="input-phone">聯絡電話<span class="required">*</span></label>
+                  <input type="tel" id="input-phone" class="form-input" placeholder="例如：0912345678" required autocomplete="tel">
+                  <span class="error-msg">請輸入正確的手機號碼（10位數字）</span>
+                </div>
+
+                <div class="form-field" id="field-email">
+                  <label class="form-label" for="input-email">電子信箱<span class="required">*</span></label>
+                  <input type="email" id="input-email" class="form-input" placeholder="example@email.com" required autocomplete="email">
+                  <span class="error-msg">請輸入正確的電子郵件格式</span>
+                </div>
+              </div>
+
+              <div class="form-field size-selector-wrapper" id="field-shirt-size">
+                <div class="size-header">
+                  <label class="form-label">跑衣尺寸選擇<span class="required">*</span></label>
+                  <button type="button" class="btn-size-chart" id="btn-open-size-modal">💡 跑衣尺寸對照表</button>
+                </div>
+                <div class="size-grid">
+                  <label class="size-option">
+                    <input type="radio" name="shirt-size" value="XS">
+                    <span class="size-box">XS</span>
+                  </label>
+                  <label class="size-option">
+                    <input type="radio" name="shirt-size" value="S">
+                    <span class="size-box">S</span>
+                  </label>
+                  <label class="size-option">
+                    <input type="radio" name="shirt-size" value="M" checked>
+                    <span class="size-box">M</span>
+                  </label>
+                  <label class="size-option">
+                    <input type="radio" name="shirt-size" value="L">
+                    <span class="size-box">L</span>
+                  </label>
+                  <label class="size-option">
+                    <input type="radio" name="shirt-size" value="XL">
+                    <span class="size-box">XL</span>
+                  </label>
+                  <label class="size-option">
+                    <input type="radio" name="shirt-size" value="2XL">
+                    <span class="size-box">2XL</span>
+                  </label>
+                  <label class="size-option">
+                    <input type="radio" name="shirt-size" value="3XL">
+                    <span class="size-box">3XL</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group-row">
+                <div class="form-field" id="field-emergency-name">
+                  <label class="form-label" for="input-emergency-name">緊急聯絡人姓名<span class="required">*</span></label>
+                  <input type="text" id="input-emergency-name" class="form-input" placeholder="請輸入聯絡人姓名" required>
+                  <span class="error-msg">緊急聯絡人姓名為必填</span>
+                </div>
+
+                <div class="form-field" id="field-emergency-phone">
+                  <label class="form-label" for="input-emergency-phone">緊急聯絡人電話<span class="required">*</span></label>
+                  <input type="tel" id="input-emergency-phone" class="form-input" placeholder="例如：0912345678" required>
+                  <span class="error-msg">請輸入正確的緊急聯絡人聯絡電話</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 步驟 4：確認送出 -->
+            <div class="form-step" id="step-4-content">
+              <div>
+                <h2 class="step-title">核對明細與付款</h2>
+                <p class="step-subtitle">請核對您的參賽與付款明細，並同意賽事條款完成報名</p>
+              </div>
+
+              <!-- 費用試算明細 -->
+              <div class="receipt-box">
+                <div class="receipt-item">
+                  <span id="receipt-category-label">42K 全程馬拉松組 報名費</span>
+                  <span id="receipt-category-price">NT$ 1,200</span>
+                </div>
+                <div class="receipt-item">
+                  <span>賽事計時晶片押金 (完賽可退)</span>
+                  <span>NT$ 100</span>
+                </div>
+                <div class="receipt-item">
+                  <span>選手號碼布與物資寄送服務費</span>
+                  <span>NT$ 80</span>
+                </div>
+                <div class="receipt-item total">
+                  <span>總計金額</span>
+                  <span id="receipt-total-price">NT$ 1,380</span>
+                </div>
+              </div>
+
+              <!-- 條款與宣告勾選 -->
+              <div class="form-field" id="field-consent">
+                <label class="consent-container">
+                  <input type="checkbox" id="checkbox-consent" class="consent-checkbox" required>
+                  <span class="consent-text">
+                    本人已詳閱並同意本賽事的 <a href="#" onclick="alert('賽事免責與安全聲明內容...\n1. 參賽者需評估自身健康狀況。\n2. 賽事期間提供公共意外險。\n3. 同意授權大會拍攝並使用活動中之肖像照片。'); return false;">參賽免責聲明</a>、<a href="#" onclick="alert('健康承諾條款...\n1. 承諾無任何不適合劇烈運動之疾病。\n2. 若於賽事中因自身疾病發生意外，需自行負責。'); return false;">健康切結條款</a>，並保證以上填寫之個人資料皆屬實，且自願承擔參賽過程中的一切安全風險。
+                  </span>
+                </label>
+                <span class="error-msg" style="margin-left:30px;">您必須同意參賽免責聲明與切結書才能送出報名</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 表單操作按鈕 -->
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="btn-prev" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+              上一步
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-next">
+              下一步
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 右欄：號碼布即時預覽 -->
+      <section class="preview-section">
+        <div class="preview-container">
+          <h3 class="preview-title">實時號碼布預覽</h3>
+          
+          <!-- 3D 傾斜卡片外觀 -->
+          <div class="bib-wrapper" id="bib-tilt-wrapper">
+            <div class="bib-card" id="preview-bib-card">
+              <!-- 號碼布打孔 -->
+              <span class="bib-hole-3"></span>
+              <span class="bib-hole-4"></span>
+              
+              <!-- 號碼布頭部 -->
+              <div class="bib-header">
+                <span class="bib-race-title">NEON RUSH</span>
+                <span class="bib-category-label" id="preview-bib-category">42K 全程馬拉松</span>
+              </div>
+              
+              <!-- 號碼布號碼與姓名 -->
+              <div class="bib-body">
+                <div class="bib-number" id="preview-bib-number">A - 8848</div>
+                <div class="bib-runner-name" id="preview-bib-name">選手姓名</div>
+              </div>
+              
+              <!-- 號碼布底部 -->
+              <div class="bib-footer">
+                <div class="bib-meta-item">
+                  <span class="bib-meta-label">血型</span>
+                  <span class="bib-meta-value" id="preview-bib-blood">A型</span>
+                </div>
+                <div class="bib-meta-item">
+                  <span class="bib-meta-label">尺寸</span>
+                  <span class="bib-meta-value" id="preview-bib-size">M</span>
+                </div>
+                <div class="bib-meta-item">
+                  <span class="bib-meta-label">緊急聯絡電話</span>
+                  <span class="bib-meta-value" id="preview-bib-emergency">--</span>
+                </div>
+                <!-- 條碼 -->
+                <div class="bib-barcode-img"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 報名摘要小卡 -->
+          <div class="preview-summary-card">
+            <h4 class="summary-heading">報名資訊總覽</h4>
+            <div class="summary-details-list">
+              <div class="summary-row">
+                <span class="summary-label">參賽組別</span>
+                <span class="summary-value" id="summary-category">42K 全程馬拉松組</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">選手姓名</span>
+                <span class="summary-value" id="summary-name">尚未輸入</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">跑衣尺寸</span>
+                <span class="summary-value" id="summary-size">M (標準尺寸)</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">合計費用</span>
+                <span class="summary-value highlight" id="summary-total">NT$ 1,380</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 報名成功畫面 (預設隱藏) -->
+    <div class="success-screen" id="success-dashboard">
+      <div class="success-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
+      </div>
+      <h2 class="success-title">報名完成！</h2>
+      <p class="success-subtitle">
+        恭喜您已成功報名 2026 NEON RUSH 夜跑馬拉松！大會已經為您配發參賽號碼與電子號碼布。以下是您的電子憑證，請妥善保存，亦可下載為 PDF 用於現場報到。
+      </p>
+
+      <!-- 成功憑證卡 (融合收據與最終號碼布) -->
+      <div class="success-ticket-container" id="printable-ticket">
+        
+        <!-- 號碼布複製品 -->
+        <div class="bib-card" id="success-bib-card" style="box-shadow:none; border:1px solid #e2e8f0;">
+          <span class="bib-hole-3"></span><span class="bib-hole-4"></span>
+          <div class="bib-header">
+            <span class="bib-race-title">NEON RUSH</span>
+            <span class="bib-category-label" id="success-bib-category-lbl">42K 全程馬拉松</span>
+          </div>
+          <div class="bib-body">
+            <div class="bib-number" id="success-bib-number-lbl">A-8848</div>
+            <div class="bib-runner-name" id="success-bib-name-lbl">王小明</div>
+          </div>
+          <div class="bib-footer">
+            <div class="bib-meta-item">
+              <span class="bib-meta-label">血型</span>
+              <span class="bib-meta-value" id="success-bib-blood-lbl">A型</span>
+            </div>
+            <div class="bib-meta-item">
+              <span class="bib-meta-label">尺寸</span>
+              <span class="bib-meta-value" id="success-bib-size-lbl">M</span>
+            </div>
+            <div class="bib-meta-item">
+              <span class="bib-meta-label">緊急聯絡電話</span>
+              <span class="bib-meta-value" id="success-bib-emergency-lbl">--</span>
+            </div>
+            <div class="bib-barcode-img"></div>
+          </div>
+        </div>
+
+        <div class="ticket-divider"></div>
+
+        <!-- 虛擬報到 QR CODE 與明細 -->
+        <div style="display:flex; justify-content:space-between; align-items:center; text-align:left; gap:20px;">
+          <div>
+            <h4 style="font-family:var(--font-ui); font-size:16px; margin-bottom:8px; color:#ffffff;">電子報到憑證</h4>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin-bottom:4px;">賽事日期：2026 年 10 月 18 日 (日)</p>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin-bottom:4px;" id="success-ticket-id">報名編號：NR-2026-692745</p>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.5;" id="success-ticket-amount">付款狀態：已完成付款 (NT$ 1,380)</p>
+          </div>
+          <!-- 向量生成的虛擬 QR Code -->
+          <div style="background:#ffffff; padding:10px; border-radius:10px; width:90px; height:90px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px rgba(0,0,0,0.25);">
+            <svg width="70" height="70" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+              <path d="M0 0h7v7H0V0zm2 2v3h3V2H2zm5 0h2v1H7v2h2v2H7V7h4V0H7v2zm5 0h1v1h-1V2zm2-2h4v1h-3v2h2v1h-2v3h-1V0zm5 2h1v1h-1V2zm2-2h3v3h-1v1h1v3h-3v-1h2V4h-2V3h1V2h-1V0zm3 5h-1V4h1v1zm-3 1v1h-1V6h1zm-5-3h1v1h-1V3zm2 1h1v1h-1V4zm-7 5v4h1V9H7zm2-2h1v1H9V7zm-2 2v2H5V9h2zm-7 2h1v1H0v-1zm1 1v2h1v-2H1zm5 0v2h1v-2H6zm3-2v3H8v-1H7v2h3v-4H9zm1 4v1h1v-1h-1zm2-3v1h1v-1h-1zm1 2h1v1h-1v-1zm1-1h1v1h-1v-1zm1-1h1v1h-1v-1zm-4-1h1v1h-1v-1zm4 3h1v1h-1v-1zm2-1h1v1h-1v-1zm-1-2h1v1h-1v-1zm2-1h1v1h-1v-1zm1 1h1v1h-1v-1zm0 2h1v1h-1v-1zm-2 2h1v1h-1v-1zm2 1h1v1h-1v-1zm-11 3h7v7H0v-7zm2 2v3h3v-3H2zm8 0h2v1h-2v1h2v1h-1v1h2v1h-3v-5zm4 0h1v2h1v-2h2v5h-1v-2h-1v2h-2v-3zm3 0h1v1h-1v-1zm0 3h1v1h-1v-3z" fill="#000000"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 操作按鈕 -->
+      <div class="success-actions">
+        <button class="btn btn-secondary" onclick="window.print();">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
+          列印此號碼布 / 憑證
+        </button>
+        <button class="btn btn-primary" onclick="window.location.reload();">
+          再報名一位
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 跑衣尺寸對照表彈窗 (Modal) -->
+  <div class="modal" id="size-chart-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Neon Rush 紀念跑衣尺寸對照表</h3>
+        <button type="button" class="btn-close-modal" id="btn-close-size-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:15px; line-height:1.5;">
+          * 單位：公分 (cm)。請將您平常穿著的舒適衣物平鋪測量胸寬、衣長，並對照以下表格選購合適尺寸。
+        </p>
+        <table class="size-table">
+          <thead>
+            <tr>
+              <th>尺寸</th>
+              <th>胸寬 (cm)</th>
+              <th>衣長 (cm)</th>
+              <th>建議身高</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>XS</td>
+              <td>44</td>
+              <td>62</td>
+              <td>150 - 158 cm</td>
+            </tr>
+            <tr>
+              <td>S</td>
+              <td>47</td>
+              <td>65</td>
+              <td>158 - 165 cm</td>
+            </tr>
+            <tr>
+              <td>M</td>
+              <td>50</td>
+              <td>68</td>
+              <td>165 - 172 cm</td>
+            </tr>
+            <tr>
+              <td>L</td>
+              <td>53</td>
+              <td>71</td>
+              <td>172 - 178 cm</td>
+            </tr>
+            <tr>
+              <td>XL</td>
+              <td>56</td>
+              <td>74</td>
+              <td>178 - 183 cm</td>
+            </tr>
+            <tr>
+              <td>2XL</td>
+              <td>59</td>
+              <td>77</td>
+              <td>183 - 188 cm</td>
+            </tr>
+            <tr>
+              <td>3XL</td>
+              <td>62</td>
+              <td>80</td>
+              <td>188 - 195 cm</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="size-modal-note">
+          ⚠️ 注意事項：<br>
+          1. 尺寸均為手工平鋪測量，可能存在 ±2cm 的合理誤差，敬請見諒。<br>
+          2. 本紀念跑衣為排汗透氣運動機能材質，版型為標準運動版型（稍微合身），如喜愛寬鬆穿著建議挑選大一號尺寸。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
